@@ -17,11 +17,13 @@ export default (context) => {
       if (matchComponents.length == 0) {
         reject({ code: 404 });
       }
+        // resolve(app);
+
 
       Promise.all(
         matchComponents.map((component) => {
           if (component.asyncData) {
-            return component.asyncData();
+            return component.asyncData(store);
           }
         })
       ).then(() => {

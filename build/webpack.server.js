@@ -16,6 +16,7 @@ module.exports = merge(base, {
     libraryTarget: "commonjs2", // module.exports 导出
   },
   plugins: [
+    new ServerRenderPlugin(),
     new HtmlWebpackPlugin({
       filename: "server.html",
       template: resolve("../public/server.html"),
@@ -23,6 +24,5 @@ module.exports = merge(base, {
       minify: false, //不压缩
       // client: "/client.bundle.js",
     }),
-    new ServerRenderPlugin(),
   ],
 });
