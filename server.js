@@ -8,28 +8,28 @@ const path = require("path");
 const VueServerRender = require("vue-server-renderer");
 
 // const ServerBundle = fs.readFileSync("./dist/server.bundle.js", "utf8");
-const ServerBundle = require("./dist/vue-ssr-server-bundle.json");
+const ServerBundle = require("./dist/server/vue-ssr-server-bundle.json");
 
-const template = fs.readFileSync("./dist/server.html", "utf8");
-const clientManifest = require("./dist/vue-ssr-client-manifest.json");
+const template = fs.readFileSync("./public/index.html", "utf8");
+const clientManifest = require("./dist/client/vue-ssr-client-manifest.json");
 const render = VueServerRender.createBundleRenderer(ServerBundle, {
+  runInNewContext: false, // 推荐
   template,
   clientManifest,
 });
 
-router.get("/", async (ctx) => {
-  ctx.body = await new Promise((resolve, reject) => {
-    render.renderToString({ url: "/" }, (err, data) => {
-      console.log("data", data);
-      if (err) reject(err);
-      resolve(data);
-    });
-  });
-});
+// router.get("/", async (ctx) => {
+//   ctx.body = await new Promise((resolve, reject) => {
+//     render.renderToString({ url: "/" }, (err, data) => {
+//       if (err) reject(err);
+//       resolve(data);
+//     });
+//   });
+// });
 
 app.use(router.routes());
 // 当客户端发送请求时会先去dist目录下查找
-app.use(static(path.resolve(__dirname, "dist")));
+app.use(static(path.resolve(__dirname, "dist/client"), { index: false }));
 app.use(async (ctx) => {
   try {
     ctx.body = await new Promise((resolve, reject) => {

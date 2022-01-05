@@ -10,12 +10,12 @@ export default {
   mounted() {
     this.$store.dispatch("changeName");
   },
-  asyncData(store) {
+  asyncData({ store, route }) {
     return store.dispatch("changeName");
   },
   methods: {
     clickMe() {
-      alert("点击");
+      alert("测试点击");
     },
   },
 };

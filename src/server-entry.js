@@ -1,5 +1,4 @@
 // 服务端渲染只需将渲染的实例导出即可
-import { ContextExclusionPlugin } from "webpack";
 import createApp from "./main";
 export default (context) => {
   const { url } = context;
@@ -14,24 +13,28 @@ export default (context) => {
     router.onReady(() => {
       const matchComponents = router.getMatchedComponents();
       console.log("matchComponents", matchComponents);
-      if (matchComponents.length == 0) {
+      if (!matchComponents.length) {
         reject({ code: 404 });
       }
-        // resolve(app);
-
+      // resolve(app);
 
       Promise.all(
         matchComponents.map((component) => {
           if (component.asyncData) {
-            return component.asyncData(store);
+            return component.asyncData({
+              store,
+              route: router.currentRoute,
+            });
           }
         })
-      ).then(() => {
-        // Promise.all中方法会改变store中的state
-        // 把vuex的状态挂载到上下文中
-        context.state = store.state;
-        resolve(app);
-      });
+      )
+        .then(() => {
+          // Promise.all中方法会改变store中的state
+          // 把vuex的状态挂载到上下文中
+          context.state = store.state;
+          resolve(app);
+        })
+        .catch(reject);
     }, reject);
   });
 };

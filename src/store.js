@@ -24,9 +24,6 @@ export default () => {
       },
     },
   });
-  // 浏览器执行时需要将服务端的最新store状态替换掉客户端的store
-  if (typeof window !== "undefined" && window.__INITIAL_STATE__) {
-    store.replaceState(window.__INITIAL_STATE__);
-  }
+
   return store;
 };
